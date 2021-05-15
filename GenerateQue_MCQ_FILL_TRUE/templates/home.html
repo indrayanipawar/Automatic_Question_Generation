@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+
+        <!-- <script>
+            function myFunction() {
+                console.log(document.querySelector("#input").value);
+                const Url = 'http://127.0.0.1:5000/';
+                const Data = {text: document.querySelector("#input").value,
+                                option: document.querySelector("#Qtype").value};
+                $.post(Url, Data, function (data, status){
+                    console.log(`${data} and status is ${status}`);
+                    var obj = JSON.parse(data);
+                    document.querySelector("#Output").value = obj["data"]
+                });
+            }
+            document.querySelector("#send").addEventListener( "click", myFunction);
+        </script> -->
+    </head>
+    <body>
+        <h1 style="text-align: center">Automatic Question Generator</h1>
+        <div class="container">
+        <div class = "row">
+            <div class = "col">
+            <form method="POST", action="{{url_for('home')}}", enctype="multipart/form-data">
+                <div type="text" for="input">Enter your text</div>
+                <br>
+                <textarea rows="20" cols="70"name="input" id="input"></textarea>
+                <br>
+                <select name="Qtype" id="Qtype">
+                    <option value="blanks">Fill in the blanks</option>
+                    <option value="mcq">Multiple Choice</option>
+                    <option value="truefalse">True/False</option>
+                </select>
+
+                <br><br>
+
+                <button type = "submit" id = "send">Submit</button><br><br>
+            </form>
+        </div>
+        <div class = "col text-wrap">
+
+        <div>Your Questions</div>
+        <div id = "output">
+            {% if option == 'blanks' or option == 'truefalse' %}
+                {% for que in data %}
+                <p>Question: {{ que['Question'] }}</p>
+                <p>Answer: {{que['Answer']}}</p>
+                {% endfor %}
+            {% elif option == 'mcq' %}
+                {% for que in data %}
+                    <p>Question: {{ que['Question'] }}</p>
+                    <p>Answer: </p>
+                    {% for option in que['Answer'] %}
+                        {% for key in option %}
+                            <p>  {{key}}: {{option[key]}}</p>
+                        {% endfor %}
+                    {% endfor %}
+                    <p>More Options: {{que['MoreOptions']}}</p>
+                {% endfor %}
+            {% else %}
+                <p>Try Again</p>
+            {% endif %}
+        </div>
+        </div>
+        </div>
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </body>
+</html>
